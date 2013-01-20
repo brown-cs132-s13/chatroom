@@ -245,7 +245,7 @@ q.on('end', function(){
 
 <pre><code>CREATE TABLE rooms (
     id SERIAL PRIMARY KEY,
-    name CHAR(6) NOT NULL
+    name CHAR(6) UNIQUE NOT NULL
 );
 
 CREATE TABLE messages (
@@ -257,7 +257,7 @@ CREATE TABLE messages (
 );
 </code></pre>
 
-<p>You are free to make modifications to it as you see fit, but this schema should be sufficient for the requirements of the project.</p>
+<p>You are free to make modifications to it as you see fit, but this schema should be sufficient for the requirements of the project. Note well that room names <em>must</em> be unique, and you will get a database error if you try to reuse one. Be sure to handle that error, and generate a new identifier under those circumstances.</p>
 
 <h3 id="parameterizedqueries">Parameterized Queries</h3>
 
@@ -272,6 +272,23 @@ var q = conn.query(sql, ['ABC123']);
 q.on('row', function(row){
     // ...
 });
+</code></pre>
+
+<h2 id="generatingroomidentifiers">Generating Room Identifiers</h2>
+
+<p>There are a number of strategies you could use to generate room identifiers. One straightforward one is this:</p>
+
+<pre><code>function generateRoomIdentifier() {
+    // make a list of legal characters
+    // we're intentionally excluding 0, O, I, and 1 for readability
+    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+    var result = '';
+    for (var i = 0; i &lt; 6; i++)
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+
+    return result;
+}
 </code></pre>
 
 <h2 id="refreshingthemessageslist">Refreshing the Messages List</h2>
