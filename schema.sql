@@ -1,0 +1,12 @@
+CREATE TABLE rooms (
+    id SERIAL PRIMARY KEY,
+    name CHAR(6) NOT NULL
+);
+
+CREATE TABLE messages (
+    id BIGSERIAL PRIMARY KEY,
+    room INTEGER NOT NULL REFERENCES rooms(id),
+    nickname VARCHAR(255) NOT NULL,
+    body TEXT NOT NULL,
+    time TIMESTAMP WITH TIME ZONE NOT NULL
+);
