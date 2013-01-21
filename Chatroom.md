@@ -122,15 +122,17 @@ As you've probably learned by now, it's very dangerous to put user-provided info
 
   [sql-injection]: http://en.wikipedia.org/wiki/SQL_injection
 
-Say, for instance, you want to get all messages attached to the room named "ABC123". Use a question mark in place of the value of the field, and then pass an array of parameters to the `conn.query(...)` method:
+Say, for instance, you want to get all messages attached to the room named "ABC123". Use a dollar sign, and a number, in place of the value of the field, and then pass an array of parameters to the `conn.query(...)` method:
 
     var sql  = 'SELECT nickname, body, time FROM messages LEFT JOIN rooms ON messages.room = rooms.id';
-        sql += 'WHERE rooms.name = ? ORDER BY time ASC';
+        sql += 'WHERE rooms.name = $1 ORDER BY time ASC';
     
     var q = conn.query(sql, ['ABC123']);
     q.on('row', function(row){
         // ...
     });
+
+In this example, the variable `$1` corresponds to the first (and only) element in the array, which is `'ABC123'`.
 
 ## Generating Room Identifiers
 There are a number of strategies you could use to generate room identifiers. One straightforward one is this:

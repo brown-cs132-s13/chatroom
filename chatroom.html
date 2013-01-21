@@ -263,16 +263,18 @@ CREATE TABLE messages (
 
 <p>As you&#8217;ve probably learned by now, it&#8217;s very dangerous to put user-provided information directly into a SQL query, as that leaves you wide open to <a href="http://en.wikipedia.org/wiki/SQL_injection">SQL injection attacks</a>. For that reason, whenever you want to use user input in a query, you should use <em>bound parameters</em> or (ideally) prepared statements. any-db does not support the latter, so we&#8217;ll use the former.</p>
 
-<p>Say, for instance, you want to get all messages attached to the room named &#8220;ABC123&#8221;. Use a question mark in place of the value of the field, and then pass an array of parameters to the <code>conn.query(...)</code> method:</p>
+<p>Say, for instance, you want to get all messages attached to the room named &#8220;ABC123&#8221;. Use a dollar sign, and a number, in place of the value of the field, and then pass an array of parameters to the <code>conn.query(...)</code> method:</p>
 
 <pre><code>var sql  = 'SELECT nickname, body, time FROM messages LEFT JOIN rooms ON messages.room = rooms.id';
-    sql += 'WHERE rooms.name = ? ORDER BY time ASC';
+    sql += 'WHERE rooms.name = $1 ORDER BY time ASC';
 
 var q = conn.query(sql, ['ABC123']);
 q.on('row', function(row){
     // ...
 });
 </code></pre>
+
+<p>In this example, the variable <code>$1</code> corresponds to the first (and only) element in the array, which is <code>'ABC123'</code>.</p>
 
 <h2 id="generatingroomidentifiers">Generating Room Identifiers</h2>
 
