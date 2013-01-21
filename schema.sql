@@ -1,6 +1,6 @@
 CREATE TABLE rooms (
     id SERIAL PRIMARY KEY,
-    name CHAR(6) NOT NULL
+    name CHAR(6) UNIQUE NOT NULL
 );
 
 CREATE TABLE messages (

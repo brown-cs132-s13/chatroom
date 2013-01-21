@@ -104,7 +104,7 @@ The schema for the `chatroom` database is as follows:
 
     CREATE TABLE rooms (
         id SERIAL PRIMARY KEY,
-        name CHAR(6) NOT NULL
+        name CHAR(6) UNIQUE NOT NULL
     );
     
     CREATE TABLE messages (
@@ -115,7 +115,7 @@ The schema for the `chatroom` database is as follows:
         time TIMESTAMP WITH TIME ZONE NOT NULL
     );
 
-You are free to make modifications to it as you see fit, but this schema should be sufficient for the requirements of the project.
+You are free to make modifications to it as you see fit, but this schema should be sufficient for the requirements of the project. Note well that room names *must* be unique, and you will get a database error if you try to reuse one. Be sure to handle that error, and generate a new identifier under those circumstances.
 
 ### Parameterized Queries
 As you've probably learned by now, it's very dangerous to put user-provided information directly into a SQL query, as that leaves you wide open to [SQL injection attacks][sql-injection]. For that reason, whenever you want to use user input in a query, you should use *bound parameters* or (ideally) prepared statements. any-db does not support the latter, so we'll use the former.
@@ -131,6 +131,21 @@ Say, for instance, you want to get all messages attached to the room named "ABC1
     q.on('row', function(row){
         // ...
     });
+
+## Generating Room Identifiers
+There are a number of strategies you could use to generate room identifiers. One straightforward one is this:
+
+    function generateRoomIdentifier() {
+        // make a list of legal characters
+        // we're intentionally excluding 0, O, I, and 1 for readability
+        var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        
+        var result = '';
+        for (var i = 0; i < 6; i++)
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        
+        return result;
+    }
 
 ## Refreshing the Messages List
 There are a couple of strategies you could feasibly use to keep the messages list updating. One strategy would be to create a separate URL, like `/ABC123/messages`, that contains only the HTML for the messages in your chatroom (without any of the chrome, like the new message input box), and show that in an [iframe][iframe]. You can then refresh that iframe periodically without affecting the rest of your page's content. One easy way to do that is with the Refresh header:
