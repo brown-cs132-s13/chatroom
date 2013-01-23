@@ -185,15 +185,19 @@ var html  = '<!DOCTYPE html>\n';
     html += '    <title>Room: ' + roomName + '</title>\n';
     // ...
 ```
-... but why ever would you want to use *that* monstrosity? We recommend that you use a templating engine to process your HTML. [Mustache][mustache] is the templating engine recommended by the TAs, and we've included a Node implementation of Mustache, [mu][mu], in your package's dependencies.
+... but why ever would you want to use *that* monstrosity? We recommend that you use a templating engine to process your HTML. [Mustache][mustache] is the templating engine recommended by the TAs, and we've included a Twitter's Node implementation of Mustache, [Hogan][hogan], in your package's dependencies. We've also included the [consolidate.js][consolidate] library, which is an adapter that lets various templating engines work directly with Express.
 
   [mustache]: http://mustache.github.com
-  [mu]: https://github.com/raycmorgan/Mu
+  [hogan]: http://twitter.github.com/hogan.js/
+  [consolidate]: https://github.com/visionmedia/consolidate.js
 
-If you'd like to use mu, start out by creating a directory called "templates" (or whatever you like, really) in your project directory, and then import `mu2` into your project:
+If you'd like to use Hogan, start out by creating a directory called "templates" (or whatever you like, really) in your project directory, and then configure Express to render HTML files using Hogan:
 
-    var mu = require('mu2');
-    mu.root = __dirname + '/templates';
+```javascript
+var engines = require('consolidate');
+app.engine('html', engines.hogan); // tell Express to run .html files through Hogan
+app.set('views', __dirname + '/templates'); // tell Express where to find templates
+```
 
 Then, inside your templates directory, create (e.g.) a `room.html` file. Write out your template using Mustache (see [the Mustache website][mustache] and [the Mustache manual][mustache5]):
 
@@ -205,15 +209,12 @@ Then, inside your templates directory, create (e.g.) a `room.html` file. Write o
 
   [mustache5]: http://mustache.github.com/mustache.5.html
 
-... and then use mu to compile it, and serve it as a response:
+... and then use `response.render(...)` to serve it as a response:
 
 ```javascript
 app.get('/:roomName', function(request, response){
     // do any work you need to do, then
-    response.status(200).type('html');
-    
-    var t = mu.compileAndRender('room.html', {roomName: request.params.roomName});
-    t.pipe(response);   // pipe the data back to the browser
+    response.render('room.html', {roomName: request.params.roomName});
 });
 ```
 

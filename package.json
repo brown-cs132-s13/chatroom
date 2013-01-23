@@ -6,6 +6,7 @@
 		"express": "3.0.x",
 		"any-db": "0.3.x",
 		"pg": ">= 0.10.2",
-		"mu2": "0.5.x"
+		"hogan.js": "2.0.x",
+		"consolidate": "0.7.x"
 	}
 }

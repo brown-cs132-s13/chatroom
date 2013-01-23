@@ -325,13 +325,13 @@ q.on('row', function(row){
     html += &apos;    &lt;title&gt;Room: &apos; + roomName + &apos;&lt;/title&gt;\n&apos;;
     // ...</code></pre>
 
-<p>&#8230; but why ever would you want to use <em>that</em> monstrosity? We recommend that you use a templating engine to process your HTML. <a href="http://mustache.github.com">Mustache</a> is the templating engine recommended by the TAs, and we&#8217;ve included a Node implementation of Mustache, <a href="https://github.com/raycmorgan/Mu">mu</a>, in your package&#8217;s dependencies.</p>
+<p>&#8230; but why ever would you want to use <em>that</em> monstrosity? We recommend that you use a templating engine to process your HTML. <a href="http://mustache.github.com">Mustache</a> is the templating engine recommended by the TAs, and we&#8217;ve included a Twitter&#8217;s Node implementation of Mustache, <a href="http://twitter.github.com/hogan.js/">Hogan</a>, in your package&#8217;s dependencies. We&#8217;ve also included the <a href="https://github.com/visionmedia/consolidate.js">consolidate.js</a> library, which is an adapter that lets various templating engines work directly with Express.</p>
 
-<p>If you&#8217;d like to use mu, start out by creating a directory called &#8220;templates&#8221; (or whatever you like, really) in your project directory, and then import <code>mu2</code> into your project:</p>
+<p>If you&#8217;d like to use Hogan, start out by creating a directory called &#8220;templates&#8221; (or whatever you like, really) in your project directory, and then configure Express to render HTML files using Hogan:</p>
 
-<pre><code>var mu = require('mu2');
-mu.root = __dirname + '/templates';
-</code></pre>
+<pre><code class="javascript">var engines = require(&apos;consolidate&apos;);
+app.engine(&apos;html&apos;, engines.hogan); // tell Express to run .html files through Hogan
+app.set(&apos;views&apos;, __dirname + &apos;/templates&apos;); // tell Express where to find templates</code></pre>
 
 <p>Then, inside your templates directory, create (e.g.) a <code>room.html</code> file. Write out your template using Mustache (see <a href="http://mustache.github.com">the Mustache website</a> and <a href="http://mustache.github.com/mustache.5.html">the Mustache manual</a>):</p>
 
@@ -342,14 +342,11 @@ mu.root = __dirname + '/templates';
 ...
 </code></pre>
 
-<p>&#8230; and then use mu to compile it, and serve it as a response:</p>
+<p>&#8230; and then use <code>response.render(...)</code> to serve it as a response:</p>
 
 <pre><code class="javascript">app.get(&apos;/:roomName&apos;, function(request, response){
     // do any work you need to do, then
-    response.status(200).type(&apos;html&apos;);
-    
-    var t = mu.compileAndRender(&apos;room.html&apos;, {roomName: request.params.roomName});
-    t.pipe(response);   // pipe the data back to the browser
+    response.render(&apos;room.html&apos;, {roomName: request.params.roomName});
 });</code></pre>
 
 <p>If you use Ajax to refresh the messages list, and only send JSON back and forth between the client and server, your HTML rendering requirements should be fairly lightweight. For instance, generally speaking, it is likely that the only information you&#8217;ll need to get to your room page is the name of your room. If you find yourself with a fairly small amount of variables that you need to expose, you might consider using the <code>meta</code> tag trick.</p>
