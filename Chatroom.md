@@ -185,7 +185,7 @@ var html  = '<!DOCTYPE html>\n';
     html += '    <title>Room: ' + roomName + '</title>\n';
     // ...
 ```
-... but why ever would you want to use *that* monstrosity? We recommend that you use a templating engine to process your HTML. [Mustache][mustache] is the templating engine recommended by the TAs, and we've included a Twitter's Node implementation of Mustache, [Hogan][hogan], in your package's dependencies. We've also included the [consolidate.js][consolidate] library, which is an adapter that lets various templating engines work directly with Express.
+... but why ever would you want to use *that* monstrosity? We recommend that you use a templating engine to process your HTML. [Mustache][mustache] is the templating language recommended by the TAs, and we've included Twitter's Node implementation of Mustache, [Hogan][hogan], in your package's dependencies. We've also included the [consolidate.js][consolidate] library, which is an adapter that lets various templating engines work directly with Express.
 
   [mustache]: http://mustache.github.com
   [hogan]: http://twitter.github.com/hogan.js/

@@ -325,7 +325,7 @@ q.on('row', function(row){
     html += &apos;    &lt;title&gt;Room: &apos; + roomName + &apos;&lt;/title&gt;\n&apos;;
     // ...</code></pre>
 
-<p>&#8230; but why ever would you want to use <em>that</em> monstrosity? We recommend that you use a templating engine to process your HTML. <a href="http://mustache.github.com">Mustache</a> is the templating engine recommended by the TAs, and we&#8217;ve included a Twitter&#8217;s Node implementation of Mustache, <a href="http://twitter.github.com/hogan.js/">Hogan</a>, in your package&#8217;s dependencies. We&#8217;ve also included the <a href="https://github.com/visionmedia/consolidate.js">consolidate.js</a> library, which is an adapter that lets various templating engines work directly with Express.</p>
+<p>&#8230; but why ever would you want to use <em>that</em> monstrosity? We recommend that you use a templating engine to process your HTML. <a href="http://mustache.github.com">Mustache</a> is the templating language recommended by the TAs, and we&#8217;ve included Twitter&#8217;s Node implementation of Mustache, <a href="http://twitter.github.com/hogan.js/">Hogan</a>, in your package&#8217;s dependencies. We&#8217;ve also included the <a href="https://github.com/visionmedia/consolidate.js">consolidate.js</a> library, which is an adapter that lets various templating engines work directly with Express.</p>
 
 <p>If you&#8217;d like to use Hogan, start out by creating a directory called &#8220;templates&#8221; (or whatever you like, really) in your project directory, and then configure Express to render HTML files using Hogan:</p>
 
