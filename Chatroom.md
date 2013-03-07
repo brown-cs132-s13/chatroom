@@ -98,25 +98,19 @@ To execute a simple query -- for instance, to get a list of rooms on the server 
 
 You may want to return a list of rooms that have messages within the past 5 minutes ("active" rooms). One example of a query to do that would be:
 
-TODO
-
-    SELECT DISTINCT rooms.* FROM rooms, messages
-        WHERE messages.room = rooms.id AND messages.time >= now() - INTERVAL '5 minutes';
+    SELECT DISTINCT room FROM messages WHERE time >= strftime('%s','now') - 300;
 
 The schema for the `chatroom` database is as follows:
 
-    CREATE TABLE rooms (
-        id SERIAL PRIMARY KEY,
-        name CHAR(6) UNIQUE NOT NULL
-    );
-    
-    CREATE TABLE messages (
-        id BIGSERIAL PRIMARY KEY,
-        room INTEGER NOT NULL REFERENCES rooms(id),
-        nickname VARCHAR(255) NOT NULL,
-        body TEXT NOT NULL,
-        time TIMESTAMP WITH TIME ZONE NOT NULL
-    );
+```
+CREATE TABLE messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    room TEXT,
+    nickname TEXT,
+    body TEXT,
+    time INTEGER
+)
+```
 
 You are free to make modifications to it as you see fit, but this schema should be sufficient for the requirements of the project. Note well that room names *must* be unique, and you will get a database error if you try to reuse one. Be sure to handle that error, and generate a new identifier under those circumstances.
 
@@ -128,10 +122,7 @@ It's very dangerous to put user-provided information directly into a SQL query, 
 
 Say, for instance, you want to get all messages attached to the room named "ABC123". Use a dollar sign, and a number, in place of the value of the field, and then pass an array of parameters to the `conn.query(...)` method:
 
-TODO
-
-    var sql  = 'SELECT nickname, body, time FROM messages LEFT JOIN rooms ON messages.room = rooms.id';
-        sql += 'WHERE rooms.name = $1 ORDER BY time ASC';
+    var sql = 'SELECT nickname, body, time FROM messages WHERE room=$1 ORDER BY time ASC';
     
     var q = conn.query(sql, ['ABC123']);
     q.on('row', function(row){
